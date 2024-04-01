@@ -10,27 +10,29 @@ public class server {
 		System.out.println("waiting for clients");
 		Socket soc = new Socket();
 		
-		
 		soc = ss.accept();
-		BufferedReader in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
-		PrintWriter p = new PrintWriter(soc.getOutputStream(),true);
+		System.out.println("Client Connected");
+		BufferedReader clientBuffer = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+		PrintWriter serverOut = new PrintWriter(soc.getOutputStream(),true);
 		BufferedReader serverInput = new BufferedReader(new InputStreamReader(System.in));
 		String clientmsg="";
 		
-		while(true) {	
-	
+		while(true) {		
 		
-			clientmsg = in.readLine();
-		
+			clientmsg = clientBuffer.readLine();		
 					if(clientmsg.equals("exit")) {
-						p.println("GOOD BYE");
-						break;
+						serverOut.println("GOOD BYE");
+						clientBuffer.close();
+						serverOut.close();
+						serverInput.close();
+						soc.close();
+						
 					}
 			System.out.println("Client: "+clientmsg);		
 		    String sreply = serverInput.readLine();			
-		    p.println(sreply);
-		}
-		
+		    serverOut.println(sreply);
+		}		
 	}
+		
 	
 }
